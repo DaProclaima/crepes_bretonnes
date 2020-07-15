@@ -1,13 +1,14 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from datetime import datetime
 
 def home(request):
     """ Exemple de page non valide au niveau HTML pour que l'exemple soit concis """
-    return HttpResponse("""
-        <h1>Bienvenue sur mon blog !</h1>
-        <p>Les crêpes bretonnes ça tue des mouettes en plein vol !</p>
-    """)
+    # return HttpResponse("""
+    #     <h1>Bienvenue sur mon blog !</h1>
+    #     <p>Les crêpes bretonnes ça tue des mouettes en plein vol !</p>
+    # """)
+    return render(request, 'blog/home.html', {'article_id': 42})
 
 def view_article(request, id_article):
     """
@@ -15,6 +16,12 @@ def view_article(request, id_article):
     Son ID est le second paramètre de la fonction (pour rappel, le premier
     paramètre est TOUJOURS la requête de l'utilisateur)
     """
+    ID_article = 42
+    if ID_article:
+        return HttpResponse(
+            "Vous avez demandé l'article n° "+ format(ID_article)+ "!"
+        )
+
     if id_article == 'false':
         raise Http404
 
@@ -42,4 +49,12 @@ def view_redirection(request):
     # return redirect(view_article, id_article=42)
     return redirect('afficher_article', id_article=42)
 
+def date_actuelle(request):
+    return render(request, 'blog/date.html', {'date': datetime.now()})
 
+
+def addition(request, nombre1, nombre2):
+    total = nombre1 + nombre2
+
+    # Retourne nombre1, nombre2 et la somme des deux au tpl
+    return render(request, 'blog/addition.html', locals())
